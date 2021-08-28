@@ -4,6 +4,8 @@
 namespace Spatie\QueryBuilder\Concerns;
 
 
+use Illuminate\Support\Str;
+
 trait AddMustIncludeFieldsToQuery
 {
     /** @var \Illuminate\Support\Collection */
@@ -24,7 +26,7 @@ trait AddMustIncludeFieldsToQuery
             }
 
             if (!isset($fieldKey)) {
-                $fieldKey = $this->getModel()->getTable();
+                $fieldKey = Str::camel($this->getModel()->getTable());
             }
 
             $newFields[$fieldKey][] = $exploded[$lastIndex];

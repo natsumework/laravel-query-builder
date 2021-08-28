@@ -36,8 +36,9 @@ trait AddsFieldsToQuery
     protected function addRequestedModelFieldsToQuery()
     {
         $modelTableName = $this->getModel()->getTable();
+        $camelModelTableName = Str::camel($modelTableName);
 
-        $modelFields = $this->request->fields()->get($modelTableName);
+        $modelFields = $this->request->fields()->get($camelModelTableName);
 
         if (empty($modelFields)) {
             return;
@@ -104,7 +105,7 @@ trait AddsFieldsToQuery
     protected function prependField(string $field, ?string $table = null): string
     {
         if (!$table) {
-            $table = $this->getModel()->getTable();
+            $table = Str::camel($this->getModel()->getTable());
         }
 
         if (Str::contains($field, '.')) {
