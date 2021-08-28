@@ -43,7 +43,9 @@ trait AddsFieldsToQuery
             return;
         }
 
-        $modelFields = array_unique(array_merge($modelFields,  $this->mustIncludeFields->get($modelTableName) ?? []));
+        $mustIncludeFields = $this->mustIncludeFields ?? collect([]);
+
+        $modelFields = array_unique(array_merge($modelFields,  $mustIncludeFields->get($modelTableName) ?? []));
         $prependedFields = $this->prependFieldsWithTableName($modelFields, $modelTableName);
 
         $this->select($prependedFields);
@@ -57,7 +59,9 @@ trait AddsFieldsToQuery
             return [$relation => $fields];
         })->get($relation);
 
-        $fields = array_unique(array_merge($fields, $this->mustIncludeFields->get($relation) ?? []));
+        $mustIncludeFields = $this->mustIncludeFields ?? collect([]);
+
+        $fields = array_unique(array_merge($fields, $mustIncludeFields->get($relation) ?? []));
 
         if (!$fields) {
             return [];
