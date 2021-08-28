@@ -52,9 +52,9 @@ trait AddsFieldsToQuery
     {
         $table = Str::plural(Str::snake($relation)); // TODO: make this configurable
 
-        $fields = $this->request->fields()->mapWithKeys(function ($fields, $table) {
-            return [$table => $fields];
-        })->get($table);
+        $fields = $this->request->fields()->mapWithKeys(function ($fields, $relation) {
+            return [$relation => $fields];
+        })->get($relation);
 
         if (! $fields) {
             return [];
@@ -82,7 +82,7 @@ trait AddsFieldsToQuery
 
         $unknownFields = $requestedFields->diff($this->allowedFields);
 
-        if ($unknownFields->isNotEmpty()) {
+        if ($requestedFields->isEmpty() || $unknownFields->isNotEmpty()) {
             throw InvalidFieldQuery::fieldsNotAllowed($unknownFields, $this->allowedFields);
         }
     }
