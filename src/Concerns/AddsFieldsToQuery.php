@@ -46,7 +46,7 @@ trait AddsFieldsToQuery
 
         $mustIncludeFields = $this->mustIncludeFields ?? collect([]);
 
-        $modelFields = array_unique(array_merge($modelFields,  $mustIncludeFields->get($modelTableName) ?? []));
+        $modelFields = array_unique(array_merge($modelFields ?? [],  $mustIncludeFields->get($modelTableName) ?? []));
         $prependedFields = $this->prependFieldsWithTableName($modelFields, $modelTableName);
 
         $this->select($prependedFields);
@@ -62,10 +62,10 @@ trait AddsFieldsToQuery
 
         $mustIncludeFields = $this->mustIncludeFields ?? collect([]);
 
-        $fields = array_unique(array_merge($fields, $mustIncludeFields->get($relation) ?? []));
+        $fields = array_unique(array_merge($fields ?? [], $mustIncludeFields->get($relation) ?? []));
 
         if (!$fields) {
-            return [];
+            throw InvalidFieldQuery::fieldsNotAllowed(collect([$relation]), $this->allowedFields);
         }
 
         if (!$this->allowedFields instanceof Collection) {
