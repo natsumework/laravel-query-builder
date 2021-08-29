@@ -40,13 +40,14 @@ trait AddsFieldsToQuery
 
         $modelFields = $this->request->fields()->get($camelModelTableName);
 
-        if (empty($modelFields)) {
-            return;
-        }
-
         $mustIncludeFields = $this->mustIncludeFields ?? collect([]);
 
         $modelFields = array_unique(array_merge($modelFields ?? [],  $mustIncludeFields->get($modelTableName) ?? []));
+
+        if (empty($modelFields)) {
+            throw InvalidFieldQuery::fieldsNotAllowed(collect(), $this->allowedFields);
+        }
+
         $prependedFields = $this->prependFieldsWithTableName($modelFields, $modelTableName);
 
         $this->select($prependedFields);
