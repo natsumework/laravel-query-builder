@@ -42,7 +42,7 @@ trait AddsFieldsToQuery
 
         $mustIncludeFields = $this->mustIncludeFields ?? collect([]);
 
-        $modelFields = array_unique(array_merge($modelFields ?? [],  $mustIncludeFields->get($modelTableName) ?? []));
+        $modelFields = array_unique(array_merge($modelFields ?? [],  $mustIncludeFields->get($camelModelTableName) ?? []));
 
         if (empty($modelFields)) {
             throw InvalidFieldQuery::fieldsNotAllowed(collect(), $this->allowedFields);
@@ -91,7 +91,7 @@ trait AddsFieldsToQuery
 
         $unknownFields = $requestedFields->diff($this->allowedFields);
 
-        if ($requestedFields->isEmpty() || $unknownFields->isNotEmpty()) {
+        if ($unknownFields->isNotEmpty()) {
             throw InvalidFieldQuery::fieldsNotAllowed($unknownFields, $this->allowedFields);
         }
     }
