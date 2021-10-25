@@ -27,7 +27,7 @@ class FiltersTrashedTest extends TestCase
             ->createQueryFromFilterRequest([
                 'trashed' => '',
             ])
-            ->allowedFilters(AllowedFilter::trashed())
+            ->allowedQuickSearches(AllowedFilter::trashed())
             ->get();
 
         $this->assertCount(2, $models);
@@ -40,7 +40,7 @@ class FiltersTrashedTest extends TestCase
             ->createQueryFromFilterRequest([
                 'trashed' => 'only',
             ])
-            ->allowedFilters(AllowedFilter::trashed())
+            ->allowedQuickSearches(AllowedFilter::trashed())
             ->get();
 
         $this->assertCount(1, $models);
@@ -53,7 +53,7 @@ class FiltersTrashedTest extends TestCase
             ->createQueryFromFilterRequest([
                 'only_trashed' => true,
             ])
-            ->allowedFilters(AllowedFilter::scope('only_trashed'))
+            ->allowedQuickSearches(AllowedFilter::scope('only_trashed'))
             ->get();
 
         $this->assertCount(1, $models);
@@ -66,7 +66,7 @@ class FiltersTrashedTest extends TestCase
             ->createQueryFromFilterRequest([
                 'trashed' => 'with',
             ])
-            ->allowedFilters(AllowedFilter::trashed())
+            ->allowedQuickSearches(AllowedFilter::trashed())
             ->get();
 
         $this->assertCount(3, $models);

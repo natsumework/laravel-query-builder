@@ -223,11 +223,11 @@ class QueryBuilderTest extends TestCase
 
         $usingSortFirst = QueryBuilder::for(TestModel::class, $req)
             ->allowedSorts(\Spatie\QueryBuilder\AllowedSort::custom('name', $customSort))
-            ->allowedFilters('name')
+            ->allowedQuickSearches('name')
             ->toSql();
 
         $usingFilterFirst = QueryBuilder::for(TestModel::class, $req)
-            ->allowedFilters('name')
+            ->allowedQuickSearches('name')
             ->allowedSorts(\Spatie\QueryBuilder\AllowedSort::custom('name', $customSort))
             ->toSql();
 
@@ -256,7 +256,7 @@ class QueryBuilderTest extends TestCase
 
         QueryBuilder::for(NestedRelatedModel::class, $req)
             ->allowedSorts(\Spatie\QueryBuilder\AllowedSort::custom('name', $customSort))
-            ->allowedFilters('name')
+            ->allowedQuickSearches('name')
             ->get();
 
         $this->assertTrue(true);
@@ -297,13 +297,13 @@ class QueryBuilderTest extends TestCase
             $foundTestModel->pivot->location
         );
     }
-    
-    
+
+
     /** @test */
     public function it_clones_the_subject_upon_cloning()
     {
         $queryBuilder = QueryBuilder::for(TestModel::class);
-        
+
         $queryBuilder1 = (clone $queryBuilder)->where('id', 1);
         $queryBuilder2 = (clone $queryBuilder)->where('name', 'John Doe');
 
@@ -312,12 +312,12 @@ class QueryBuilderTest extends TestCase
             $queryBuilder2->toSql()
         );
     }
-    
+
     /** @test */
     public function it_supports_clone_as_method()
     {
         $queryBuilder = QueryBuilder::for(TestModel::class);
-        
+
         $queryBuilder1 = $queryBuilder->clone()->where('id', 1);
         $queryBuilder2 = $queryBuilder->clone()->where('name', 'John Doe');
 

@@ -27,7 +27,7 @@ class FiltersCallbackTest extends TestCase
             ->createQueryFromFilterRequest([
                 'callback' => $this->models->first()->name,
             ])
-            ->allowedFilters(AllowedFilter::callback('callback', function (Builder $query, $value) {
+            ->allowedQuickSearches(AllowedFilter::callback('callback', function (Builder $query, $value) {
                 $query->where('name', $value);
             }))
             ->get();
@@ -42,7 +42,7 @@ class FiltersCallbackTest extends TestCase
             ->createQueryFromFilterRequest([
                 'callback' => $this->models->first()->name,
             ])
-            ->allowedFilters(AllowedFilter::callback('callback', [$this, 'filterCallback']))
+            ->allowedQuickSearches(AllowedFilter::callback('callback', [$this, 'filterCallback']))
             ->get();
 
         $this->assertCount(1, $models);

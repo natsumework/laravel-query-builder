@@ -33,7 +33,7 @@ class FilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'name' => $this->models->first()->name,
             ])
-            ->allowedFilters('name')
+            ->allowedQuickSearches('name')
             ->get();
 
         $this->assertCount(1, $models);
@@ -46,7 +46,7 @@ class FilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'name' => ['first' => $this->models->first()->name],
             ])
-            ->allowedFilters('name')
+            ->allowedQuickSearches('name')
             ->get();
 
         $this->assertCount(1, $models);
@@ -59,7 +59,7 @@ class FilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'name' => strtoupper($this->models->first()->name),
             ])
-            ->allowedFilters('name')
+            ->allowedQuickSearches('name')
             ->get();
 
         $this->assertCount(1, $models);
@@ -75,7 +75,7 @@ class FilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'name' => 'abc,xyz',
             ])
-            ->allowedFilters('name')
+            ->allowedQuickSearches('name')
             ->get();
 
         $this->assertCount(2, $results);
@@ -89,7 +89,7 @@ class FilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'name' => 'None existing first name',
             ])
-            ->allowedFilters('name')
+            ->allowedQuickSearches('name')
             ->get();
 
         $this->assertCount(0, $models);
@@ -103,7 +103,7 @@ class FilterTest extends TestCase
         ]);
 
         $queryBuilderSql = QueryBuilder::for(TestModel::select('id', 'name'), $request)
-            ->allowedFilters('name', 'id')
+            ->allowedQuickSearches('name', 'id')
             ->toSql();
 
         $expectedSql = TestModel::select('id', 'name')
@@ -120,7 +120,7 @@ class FilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'id' => '1,2',
             ])
-            ->allowedFilters(AllowedFilter::exact('id'))
+            ->allowedQuickSearches(AllowedFilter::exact('id'))
             ->get();
 
         $this->assertCount(2, $results);
@@ -134,7 +134,7 @@ class FilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'id' => '2,',
             ])
-            ->allowedFilters(AllowedFilter::partial('id'))
+            ->allowedQuickSearches(AllowedFilter::partial('id'))
             ->get();
 
         $this->assertCount(1, $results);
@@ -148,7 +148,7 @@ class FilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'id' => ',,',
             ])
-            ->allowedFilters(AllowedFilter::partial('id'))
+            ->allowedQuickSearches(AllowedFilter::partial('id'))
             ->get();
 
         $this->assertCount(5, $results);
@@ -163,7 +163,7 @@ class FilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'id' => [0],
             ])
-            ->allowedFilters(AllowedFilter::partial('id'))
+            ->allowedQuickSearches(AllowedFilter::partial('id'))
             ->get();
 
         $this->assertQueryLogContains("select * from `test_models` where (LOWER(`test_models`.`id`) LIKE ?)");
@@ -181,7 +181,7 @@ class FilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'id' => $testModel->id,
             ])
-            ->allowedFilters(AllowedFilter::exact('id'))
+            ->allowedQuickSearches(AllowedFilter::exact('id'))
             ->get();
 
         $this->assertEquals($modelsResult, $models);
@@ -196,7 +196,7 @@ class FilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'name' => ' Testing ',
             ])
-            ->allowedFilters(AllowedFilter::exact('name'))
+            ->allowedQuickSearches(AllowedFilter::exact('name'))
             ->get();
 
         $this->assertCount(0, $modelsResult);
@@ -209,7 +209,7 @@ class FilterTest extends TestCase
 
         $modelsResult = $this
             ->createQueryFromFilterRequest(['named' => 'John Testing Doe'])
-            ->allowedFilters(AllowedFilter::scope('named'))
+            ->allowedQuickSearches(AllowedFilter::scope('named'))
             ->get();
 
         $this->assertCount(1, $modelsResult);
@@ -224,7 +224,7 @@ class FilterTest extends TestCase
 
         $modelsResult = $this
             ->createQueryFromFilterRequest(['relatedModels.named' => 'John\'s Post'])
-            ->allowedFilters(AllowedFilter::scope('relatedModels.named'))
+            ->allowedQuickSearches(AllowedFilter::scope('relatedModels.named'))
             ->get();
 
         $this->assertCount(1, $modelsResult);
@@ -237,7 +237,7 @@ class FilterTest extends TestCase
 
         $modelsResult = $this
             ->createQueryFromFilterRequest(['user' => 1])
-            ->allowedFilters(AllowedFilter::scope('user'))
+            ->allowedQuickSearches(AllowedFilter::scope('user'))
             ->get();
 
         $this->assertCount(1, $modelsResult);
@@ -250,7 +250,7 @@ class FilterTest extends TestCase
 
         $modelsResult = $this
             ->createQueryFromFilterRequest(['user_info' => ['id' => '1000', 'name' => 'John Testing Doe']])
-            ->allowedFilters(AllowedFilter::scope('user_info'))
+            ->allowedQuickSearches(AllowedFilter::scope('user_info'))
             ->get();
 
         $this->assertCount(1, $modelsResult);
@@ -265,7 +265,7 @@ class FilterTest extends TestCase
 
         $modelsResult = $this
             ->createQueryFromFilterRequest(['created_between' => '2016-01-01,2017-01-01'])
-            ->allowedFilters(AllowedFilter::scope('created_between'))
+            ->allowedQuickSearches(AllowedFilter::scope('created_between'))
             ->get();
 
         $this->assertCount(1, $modelsResult);
@@ -280,7 +280,7 @@ class FilterTest extends TestCase
 
         $modelsResult = $this
             ->createQueryFromFilterRequest(['created_between' => ['start' => '2016-01-01', 'end' => '2017-01-01']])
-            ->allowedFilters(AllowedFilter::scope('created_between'))
+            ->allowedQuickSearches(AllowedFilter::scope('created_between'))
             ->get();
 
         $this->assertCount(1, $modelsResult);
@@ -302,7 +302,7 @@ class FilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'custom_name' => $testModel->name,
             ])
-            ->allowedFilters(AllowedFilter::custom('custom_name', $filterClass))
+            ->allowedQuickSearches(AllowedFilter::custom('custom_name', $filterClass))
             ->first();
 
         $this->assertEquals($testModel->id, $modelResult->id);
@@ -318,7 +318,7 @@ class FilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'name' => 'abc',
             ])
-            ->allowedFilters('name', AllowedFilter::exact('id'))
+            ->allowedQuickSearches('name', AllowedFilter::exact('id'))
             ->get();
 
         $this->assertCount(2, $results);
@@ -335,7 +335,7 @@ class FilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'name' => 'abc',
             ])
-            ->allowedFilters(['name', AllowedFilter::exact('id')])
+            ->allowedQuickSearches(['name', AllowedFilter::exact('id')])
             ->get();
 
         $this->assertCount(2, $results);
@@ -353,7 +353,7 @@ class FilterTest extends TestCase
                 'name' => 'abc',
                 'id' => "1,{$model1->id}",
             ])
-            ->allowedFilters('name', AllowedFilter::exact('id'))
+            ->allowedQuickSearches('name', AllowedFilter::exact('id'))
             ->get();
 
         $this->assertCount(1, $results);
@@ -367,7 +367,7 @@ class FilterTest extends TestCase
 
         $this
             ->createQueryFromFilterRequest(['name' => 'John'])
-            ->allowedFilters('id');
+            ->allowedQuickSearches('id');
     }
 
     /** @test */
@@ -377,7 +377,7 @@ class FilterTest extends TestCase
 
         $this
             ->createQueryFromFilterRequest(['name' => 'John'])
-            ->allowedFilters('id');
+            ->allowedQuickSearches('id');
 
         $this->assertTrue(true);
     }
@@ -406,7 +406,7 @@ class FilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 '*' => '*',
             ])
-            ->allowedFilters('name', AllowedFilter::custom('*', $customFilter))
+            ->allowedQuickSearches('name', AllowedFilter::custom('*', $customFilter))
             ->get();
 
         $this->assertNotEmpty($results);
@@ -443,7 +443,7 @@ class FilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'name' => '-1',
             ])
-            ->allowedFilters(AllowedFilter::exact('name')->ignore('-1'))
+            ->allowedQuickSearches(AllowedFilter::exact('name')->ignore('-1'))
             ->get();
 
         $this->assertCount(TestModel::count(), $models);
@@ -459,7 +459,7 @@ class FilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'name' => 'John Deer,John Doe',
             ])
-            ->allowedFilters(AllowedFilter::exact('name')->ignore('John Deer'))
+            ->allowedQuickSearches(AllowedFilter::exact('name')->ignore('John Deer'))
             ->get();
 
         $this->assertCount(1, $models);
@@ -493,7 +493,7 @@ class FilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'nickname' => 'abcdef',
             ])
-            ->allowedFilters($filter)
+            ->allowedQuickSearches($filter)
             ->get();
 
         $this->assertCount(1, $models);
@@ -507,7 +507,7 @@ class FilterTest extends TestCase
 
         $models = $this
             ->createQueryFromFilterRequest(['is_visible' => 'false'])
-            ->allowedFilters($filter)
+            ->allowedQuickSearches($filter)
             ->get();
 
         $this->assertCount(0, $models);
@@ -522,7 +522,7 @@ class FilterTest extends TestCase
 
         $models = $this
             ->createQueryFromFilterRequest([])
-            ->allowedFilters(AllowedFilter::partial('name')->default('UniqueJohn'))
+            ->allowedQuickSearches(AllowedFilter::partial('name')->default('UniqueJohn'))
             ->get();
 
         $this->assertEquals(2, $models->count());
@@ -538,7 +538,7 @@ class FilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'name' => 'UniqueDoe',
             ])
-            ->allowedFilters(AllowedFilter::partial('name')->default('UniqueJohn'))
+            ->allowedQuickSearches(AllowedFilter::partial('name')->default('UniqueJohn'))
             ->get();
 
         $this->assertEquals(1, $models->count());
@@ -564,7 +564,7 @@ class FilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'ref_id' => 'h4S4MG3(+>azv4z/I<o>,>XZII/Q1On',
             ])
-            ->allowedFilters(AllowedFilter::exact('ref_id', 'name', true))
+            ->allowedQuickSearches(AllowedFilter::exact('ref_id', 'name', true))
             ->get();
         $this->assertEquals(2, $models->count());
 
@@ -573,7 +573,7 @@ class FilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'ref_id' => 'h4S4MG3(+>azv4z/I<o>|>XZII/Q1On',
             ])
-            ->allowedFilters(AllowedFilter::exact('ref_id', 'name', true, '|'))
+            ->allowedQuickSearches(AllowedFilter::exact('ref_id', 'name', true, '|'))
             ->get();
         $this->assertEquals(2, $models->count());
 
@@ -582,7 +582,7 @@ class FilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'ref_id' => 'h4S4MG3(+>azv4z/I<o>,>XZII/Q1On',
             ])
-            ->allowedFilters(AllowedFilter::exact('ref_id', 'name', true, '|'))
+            ->allowedQuickSearches(AllowedFilter::exact('ref_id', 'name', true, '|'))
             ->get();
         $this->assertEquals(0, $models->count());
     }
