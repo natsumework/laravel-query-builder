@@ -223,11 +223,11 @@ class QueryBuilderTest extends TestCase
 
         $usingSortFirst = QueryBuilder::for(TestModel::class, $req)
             ->allowedSorts(\Spatie\QueryBuilder\AllowedSort::custom('name', $customSort))
-            ->allowedQuickSearches('name')
+            ->allowedFilters('name')
             ->toSql();
 
         $usingFilterFirst = QueryBuilder::for(TestModel::class, $req)
-            ->allowedQuickSearches('name')
+            ->allowedFilters('name')
             ->allowedSorts(\Spatie\QueryBuilder\AllowedSort::custom('name', $customSort))
             ->toSql();
 
@@ -256,7 +256,7 @@ class QueryBuilderTest extends TestCase
 
         QueryBuilder::for(NestedRelatedModel::class, $req)
             ->allowedSorts(\Spatie\QueryBuilder\AllowedSort::custom('name', $customSort))
-            ->allowedQuickSearches('name')
+            ->allowedFilters('name')
             ->get();
 
         $this->assertTrue(true);

@@ -32,7 +32,7 @@ class RelationFilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'relatedModels.name' => $this->models->first()->name,
             ])
-            ->allowedQuickSearches('relatedModels.name')
+            ->allowedFilters('relatedModels.name')
             ->get();
 
         $this->assertCount(1, $models);
@@ -45,7 +45,7 @@ class RelationFilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'relatedModels.nestedRelatedModels.name' => 'est0,est1',
             ])
-            ->allowedQuickSearches('relatedModels.nestedRelatedModels.name')
+            ->allowedFilters('relatedModels.nestedRelatedModels.name')
             ->get();
 
         $this->assertCount(2, $results);
@@ -59,7 +59,7 @@ class RelationFilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'relatedModels.name' => 'None existing first name',
             ])
-            ->allowedQuickSearches('relatedModels.name')
+            ->allowedFilters('relatedModels.name')
             ->get();
 
         $this->assertCount(0, $models);
@@ -72,7 +72,7 @@ class RelationFilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'relatedModels.nestedRelatedModels.name' => 'test',
             ])
-            ->allowedQuickSearches('relatedModels.nestedRelatedModels.name')
+            ->allowedFilters('relatedModels.nestedRelatedModels.name')
             ->get();
 
         $this->assertCount(5, $models);
@@ -86,7 +86,7 @@ class RelationFilterTest extends TestCase
                 'relatedModels.name' => $this->models->first()->name,
                 'relatedModels.nestedRelatedModels.name' => 'test',
             ])
-            ->allowedQuickSearches('relatedModels.name', 'relatedModels.nestedRelatedModels.name')
+            ->allowedFilters('relatedModels.name', 'relatedModels.nestedRelatedModels.name')
             ->get();
 
         $this->assertCount(1, $models);
@@ -103,7 +103,7 @@ class RelationFilterTest extends TestCase
                     return $model->relatedModels->pluck('id');
                 })->flatten()->all(),
             ])
-            ->allowedQuickSearches(AllowedFilter::exact('relatedModels.id'))
+            ->allowedFilters(AllowedFilter::exact('relatedModels.id'))
             ->get();
 
         $this->assertCount(2, $results);
@@ -119,7 +119,7 @@ class RelationFilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'relatedModels.nestedRelatedModels.name' => ' test ',
             ])
-            ->allowedQuickSearches(AllowedFilter::exact('relatedModels.nestedRelatedModels.name'))
+            ->allowedFilters(AllowedFilter::exact('relatedModels.nestedRelatedModels.name'))
             ->get();
 
         $this->assertCount(0, $modelsResult);
@@ -134,7 +134,7 @@ class RelationFilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'relatedModels.name' => $this->models->first()->name,
             ])
-            ->allowedQuickSearches(AllowedFilter::exact('relatedModels.name', null, $addRelationConstraint))
+            ->allowedFilters(AllowedFilter::exact('relatedModels.name', null, $addRelationConstraint))
             ->toSql();
 
         $this->assertStringContainsString('`relatedModels`.`name` = ', $sql);
@@ -149,7 +149,7 @@ class RelationFilterTest extends TestCase
             ->createQueryFromFilterRequest([
                 'relatedModels.name' => $this->models->first()->name,
             ])
-            ->allowedQuickSearches(AllowedFilter::partial('relatedModels.name', null, $addRelationConstraint))
+            ->allowedFilters(AllowedFilter::partial('relatedModels.name', null, $addRelationConstraint))
             ->toSql();
 
         $this->assertStringContainsString('LOWER(`relatedModels`.`name`) LIKE ?', $sql);

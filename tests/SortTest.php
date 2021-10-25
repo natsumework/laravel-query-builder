@@ -433,7 +433,7 @@ class SortTest extends TestCase
             ],
             'sort' => '-custom',
         ]))
-            ->allowedQuickSearches([
+            ->allowedFilters([
                 AllowedFilter::scope('name', 'named'),
                 AllowedFilter::scope('between', 'createdBetween'),
             ])
